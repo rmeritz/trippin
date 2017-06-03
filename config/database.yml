@@ -1,0 +1,11 @@
+development: &default
+  adapter: postgresql
+  database: trippin_development
+  encoding: utf8
+  min_messages: warning
+  timeout: 5000
+  port: 5434
+
+test:
+  <<: *default
+  database: trippin_test
