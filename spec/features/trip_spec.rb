@@ -15,4 +15,14 @@ RSpec.feature "trip planning" do
     click_on I18n.t("helpers.submit.point_creator.create")
     expect(page).to have_a_map_with_a_point "Orlando, FL"
   end
+
+  private
+
+  RSpec::Matchers.define :have_a_map_with_a_point do |name|
+    match do |page|
+      find("#map").has_selector?("canvas")
+      # see that this is a marker on the point
+      # label on the point (or click point to see label)
+    end
+  end
 end

@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <title>Trippin</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= yield :style %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
     <%= yield %>
+    <%= yield :script %>
   </body>
 </html>
