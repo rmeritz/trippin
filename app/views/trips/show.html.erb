@@ -1,1 +1,7 @@
 <h1><%= @trip.title %></h1>
+
+<%= form_for [@trip, @point_creator] do |f| %>
+  <%= f.label :location %>
+  <%= f.text_field :location %>
+  <%= f.submit %>
+<% end %>

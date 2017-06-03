@@ -11,6 +11,7 @@ class TripsController < ApplicationController
 
   def show
     @trip = Trip.find params[:id]
+    @point_creator = PointCreator.new
   end
 
   private
