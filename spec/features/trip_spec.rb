@@ -8,7 +8,7 @@ RSpec.feature "trip planning" do
     expect(page).to have_text "Florida"
   end
 
-  scenario "adding a starting point to a trip" do
+  scenario "adding a starting point to a trip", :js do
     trip = FactoryGirl.create :trip
     visit trip_path trip
     fill_in I18n.t("helpers.label.point_creator.location"), with: "Orlando"
