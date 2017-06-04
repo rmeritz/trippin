@@ -9,6 +9,15 @@ RSpec.feature "trip planning" do
   end
 
   scenario "adding a starting point to a trip", :js do
+    Geocoder::Lookup::Test.add_stub(
+      "Orlando",
+      [
+        {
+        address: "Orland, FL, USA",
+        latitude: 28.5383355,
+        longitude: -81.3792365
+    }])
+
     trip = FactoryGirl.create :trip
     visit trip_path trip
     fill_in I18n.t("helpers.label.point_creator.location"), with: "Orlando"
