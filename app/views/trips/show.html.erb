@@ -20,7 +20,7 @@
           anchor: [0.5, 46],
           anchorXUnits: 'fraction',
           anchorYUnits: 'pixels',
-          src: 'https://openlayers.org/en/v4.1.1/examples/data/icon.png'
+          src: <%= raw image_path('map-marker-point.png').to_json %>
         }))
       });
 
@@ -73,3 +73,5 @@
   <%= f.text_field :location %>
   <%= f.submit %>
 <% end %>
+
+<div>Icons made by <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY</a></div>
