@@ -62,8 +62,8 @@ RSpec.feature "trip planning", :js do
       end
       if Set.new(coordinates) == Set.new(@actual_coordinates)
         true
-      elsif tries < 20
-        features_at_coordinates?(coordinates, tries + 5)
+      elsif tries < 5
+        features_at_coordinates?(coordinates, tries + 1)
       else
         false
       end
