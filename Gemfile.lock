@@ -43,7 +43,6 @@ GEM
     arel (8.0.0)
     bindex (0.5.0)
     builder (3.2.3)
-    byebug (9.0.6)
     capybara (2.14.0)
       addressable
       mime-types (>= 1.16)
@@ -92,6 +91,10 @@ GEM
     nokogiri (1.7.2)
       mini_portile2 (~> 2.1.0)
     pg (0.20.0)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
     public_suffix (2.0.5)
     rack (2.0.3)
     rack-test (0.6.3)
@@ -181,7 +184,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  byebug
   capybara (~> 2.13)
   capybara-selenium
   database_cleaner
@@ -190,6 +192,7 @@ DEPENDENCIES
   jquery-rails
   listen (>= 3.0.5, < 3.2)
   pg
+  pry
   rails (~> 5.1.1)
   rspec-rails
   selenium-webdriver
