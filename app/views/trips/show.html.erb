@@ -3,13 +3,30 @@
 
   <script type="text/javascript">
 
+    $("#new_point_creator").on(
+      "ajax:success", function (e, data, status, xhr) {
+
+      var newFeature = new ol.Feature({
+        geometry: new ol.geom.Point(
+            ol.proj.fromLonLat([data.long, data.lat])),
+        name: data.name,
+        });
+
+      newFeature.setStyle(iconStyle);
+
+      map.getLayers().item(1).getSource().addFeature(newFeature);
+
+
+      }
+    );
+
     var sourceLayer = new ol.layer.Tile({
         source: new ol.source.OSM()
       });
 
     var iconStyle = new ol.style.Style({
       image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-        anchor: [0.5, 46],
+        anchor: [0.5, 32],
         anchorXUnits: 'fraction',
         anchorYUnits: 'pixels',
         src: <%= raw image_path('map-marker-point.png').to_json %>
@@ -68,7 +85,7 @@
 
 <div id="map" class="map"></div>
 
-<%= form_for [@trip, @point_creator] do |f| %>
+<%= form_for [@trip, @point_creator], remote: true do |f| %>
   <%= f.label :location %>
   <%= f.text_field :location %>
   <%= f.submit %>

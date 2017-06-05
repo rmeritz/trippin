@@ -1,8 +1,7 @@
 class PointCreatorsController < ApplicationController
   def create
     point_creator = PointCreator.new point_creator_params
-    point_creator.save
-    redirect_to trip
+    render json: point_creator.save
   end
 
   private
