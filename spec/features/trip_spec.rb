@@ -42,7 +42,7 @@ RSpec.feature "trip planning", :js do
 
   RSpec::Matchers.define :have_a_map_with_a_points do |*coordinates|
     match do |page|
-      map_present? && features_at_coordinates?(coordinates)
+      map_present? && features_at_coordinates?(coordinates, 0)
     end
     failure_message do
       if !@map_presence
@@ -56,11 +56,17 @@ RSpec.feature "trip planning", :js do
       @map_presence = find("#map").has_selector?("canvas")
     end
 
-    def features_at_coordinates?(coordinates)
+    def features_at_coordinates?(coordinates, tries)
       @actual_coordinates = actual_coordinates.map do |coords|
         coords.map {|coord| coord.round }
       end
-      Set.new(coordinates) == Set.new(@actual_coordinates)
+      if Set.new(coordinates) == Set.new(@actual_coordinates)
+        true
+      elsif tries < 20
+        features_at_coordinates?(coordinates, tries + 5)
+      else
+        false
+      end
     end
 
     def actual_coordinates

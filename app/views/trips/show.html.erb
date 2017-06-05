@@ -5,20 +5,34 @@
 
     $("#new_point_creator").on(
       "ajax:success", function (e, data, status, xhr) {
+        refreshJobStaus(data.job_status_id);
+      });
 
-      var newFeature = new ol.Feature({
-        geometry: new ol.geom.Point(
-            ol.proj.fromLonLat([data.long, data.lat])),
-        name: data.name,
-        });
+    function refreshJobStaus(jobStatusId) {
+      $.ajax({
+          url: '/point_creator_job_statuses/' + jobStatusId,
+          error: function (xhr, status, error) {
+            console.log(status);
+          },
+          statusCode: {
+            200: function (data, status, xhr) {
+                   setTimeout(refreshJobStaus, 1000, jobStatusId);
+                 },
+            201: function (data, status, xhr) {
+                var newFeature = new ol.Feature({
+                  geometry: new ol.geom.Point(
+                      ol.proj.fromLonLat([data.long, data.lat])),
+                  name: data.name,
+                  });
 
-      newFeature.setStyle(iconStyle);
+                newFeature.setStyle(iconStyle);
 
-      map.getLayers().item(1).getSource().addFeature(newFeature);
-
-
-      }
-    );
+                map.getLayers().item(1).getSource().addFeature(newFeature);
+                 }
+          }
+        }
+      );
+    }
 
     var sourceLayer = new ol.layer.Tile({
         source: new ol.source.OSM()
