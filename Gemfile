@@ -4,7 +4,6 @@ gem 'rails', '~> 5.1.1'
 gem 'pg'
 
 gem 'turbolinks', '~> 5'
-gem 'jquery-rails'
 
 gem 'geocoder'
 
