@@ -14,7 +14,7 @@ RSpec.feature "trip planning", :js do
       "Orlando",
       [
         {
-        address: "Orland, FL, USA",
+        address: "Orlando, FL, USA",
         latitude: 28,
         longitude: -81
     }])
@@ -23,32 +23,35 @@ RSpec.feature "trip planning", :js do
     visit trip_path trip
     fill_in I18n.t("helpers.label.point_creator.location"), with: "Orlando"
     click_on I18n.t("helpers.submit.point_creator.create")
-    expect(page).to have_a_map_with_a_points([-81, 28])
+    expect(page).to have_a_map_with_a_points([-81, 28, "Orlando, FL, USA"])
   end
 
   scenario "add a couple points to a trip" do
     trip = FactoryGirl.create :trip
-    _idaho = FactoryGirl.create(
-      :point, trip: trip, lat: 44, long: -114
+    FactoryGirl.create(
+      :point, trip: trip, lat: 44, long: -114, name: "Idaho, USA"
     )
-    _utah = FactoryGirl.create(
-      :point, trip: trip, lat: 39, long: -111
+    FactoryGirl.create(
+      :point, trip: trip, lat: 39, long: -111, name: "Utah, USA"
     )
     visit trip_path trip
-    expect(page).to have_a_map_with_a_points([-114, 44], [-111, 39])
+    expect(page).to have_a_map_with_a_points(
+      [-114, 44, "Idaho, USA"],
+      [-111, 39, "Utah, USA",]
+    )
   end
 
   private
 
-  RSpec::Matchers.define :have_a_map_with_a_points do |*coordinates|
+  RSpec::Matchers.define :have_a_map_with_a_points do |*points|
     match do |page|
-      map_present? && features_at_coordinates?(coordinates, 0)
+      map_present? && features_at_coordinates?(points, 0)
     end
     failure_message do
       if !@map_presence
         "The map canvas was missing."
       else
-        "Expected #{coordinates} Actual #{@actual_coordinates}"
+        "Expected #{points} Actual #{@actual_coordinates}"
       end
     end
 
@@ -56,14 +59,12 @@ RSpec.feature "trip planning", :js do
       @map_presence = find("#map").has_selector?("canvas")
     end
 
-    def features_at_coordinates?(coordinates, tries)
-      @actual_coordinates = actual_coordinates.map do |coords|
-        coords.map {|coord| coord.round }
-      end
-      if Set.new(coordinates) == Set.new(@actual_coordinates)
+    def features_at_coordinates?(points, tries)
+      @actual_coordinates = actual_coordinates
+      if Set.new(points) == Set.new(@actual_coordinates)
         true
       elsif tries < 5
-        features_at_coordinates?(coordinates, tries + 1)
+        features_at_coordinates?(points, tries + 1)
       else
         false
       end
@@ -71,7 +72,8 @@ RSpec.feature "trip planning", :js do
 
     def actual_coordinates
       page.driver.evaluate_script(
-         "map.getLayers().item(1).getSource().getFeatures().map(function(feature) {return ol.proj.toLonLat(feature.getGeometry().getCoordinates())})"
+      #   "map.getLayers().item(1).getSource().getFeatures().map(function(feature) {return ol.proj.toLonLat(feature.getGeometry().getCoordinates())})"
+      "map.getLayers().item(1).getSource().getFeatures().map(function(feature) {var coord = ol.proj.toLonLat(feature.getGeometry().getCoordinates()).map(Math.round); var text = feature.getStyle().getText().getText(); coord.push(text); return coord})"
       )
     end
   end

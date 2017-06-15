@@ -2,8 +2,6 @@
 
 - As a user, I can share my trip, so they can see my plans.
 - As a user, I want to see a prettier map, so I can enjoy my experience more.
-- As a user, I want to see a label of the points, so I can know the name of the
-  place not just visualize it.
 - As a user, I want to be able to delete existing points in case I added them by
   mistake.
 - As a user, I want to autocomplete place names, so the wrong place doesn't get
