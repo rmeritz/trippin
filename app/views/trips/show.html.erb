@@ -1,7 +1,33 @@
 <%= content_for :script do %>
-  <script src="https://openlayers.org/en/v4.1.1/build/ol.js" type="text/javascript"></script>
+  <!-- <script src="https://openlayers.org/en/v4.1.1/build/ol.js" type="text/javascript"></script> -->
+  <script src="https://openlayers.org/en/v4.1.1/build/ol-debug.js" type="text/javascript"></script>
 
   <script type="text/javascript">
+    function createFeature(longitude, latitude, name) {
+      var feature = new ol.Feature({
+        geometry: new ol.geom.Point(
+            ol.proj.fromLonLat([longitude, latitude]))
+        });
+
+      var iconStyle = new ol.style.Style({
+        text: new ol.style.Text({
+          text: name,
+          font: '12px sans-serif',
+          offsetY: 10,
+        }),
+        image: new ol.style.Icon({
+          anchor: [0.5, 32],
+          anchorXUnits: 'fraction',
+          anchorYUnits: 'pixels',
+          src: <%= raw image_path('map-marker-point.png').to_json %>
+        })
+      });
+
+      feature.setStyle(iconStyle);
+
+      return feature;
+    }
+
 
     $("#new_point_creator").on(
       "ajax:success", function (e, data, status, xhr) {
@@ -19,14 +45,7 @@
                    setTimeout(refreshJobStaus, 1000, jobStatusId);
                  },
             201: function (data, status, xhr) {
-                var newFeature = new ol.Feature({
-                  geometry: new ol.geom.Point(
-                      ol.proj.fromLonLat([data.long, data.lat])),
-                  name: data.name,
-                  });
-
-                newFeature.setStyle(iconStyle);
-
+                var newFeature = createFeature(data.long, data.lat, data.name);
                 map.getLayers().item(1).getSource().addFeature(newFeature);
                  }
           }
@@ -37,27 +56,15 @@
     var sourceLayer = new ol.layer.Tile({
         source: new ol.source.OSM()
       });
-
-    var iconStyle = new ol.style.Style({
-      image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-        anchor: [0.5, 32],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'pixels',
-        src: <%= raw image_path('map-marker-point.png').to_json %>
-      }))
-    });
-
     var features = [];
 
     <% @trip.points.each do|point| %>
 
-      var iconFeature = new ol.Feature({
-        geometry: new ol.geom.Point(
-            ol.proj.fromLonLat([<%= point.long %>, <%= point.lat %>])),
-        name: <%= raw point.name.to_json %>,
-        });
-
-      iconFeature.setStyle(iconStyle);
+      var iconFeature = createFeature(
+        <%= point.long %>,
+        <%= point.lat %>,
+        <%= raw point.name.to_json %>
+      );
 
       features.push(iconFeature);
 
